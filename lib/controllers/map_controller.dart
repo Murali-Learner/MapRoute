@@ -7,9 +7,9 @@ import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:map_route_project/models/place_suggestion.dart';
-import 'package:map_route_project/utils/costants/asset_constants.dart';
-import 'package:map_route_project/utils/costants/key_constants.dart';
+import 'package:MapRoute/models/place_suggestion.dart';
+import 'package:MapRoute/utils/costants/asset_constants.dart';
+import 'package:MapRoute/utils/costants/key_constants.dart';
 
 class MapController extends GetxController {
   final locationController = Location();
@@ -86,6 +86,7 @@ class MapController extends GetxController {
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
+      debugPrint("json $json");
       final predictions = json['predictions'] as List;
       final suggestions = predictions
           .map((prediction) => PlaceSuggestion(

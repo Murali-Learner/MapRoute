@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:map_route_project/controllers/map_controller.dart';
-import 'package:map_route_project/models/place_suggestion.dart';
+import 'package:MapRoute/controllers/map_controller.dart';
+import 'package:MapRoute/models/place_suggestion.dart';
 
 class AddressInputField extends StatelessWidget {
   final TextEditingController controller;

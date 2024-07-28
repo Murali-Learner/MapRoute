@@ -1,4 +1,4 @@
-package com.example.map_route_project
+package com.example.MapRoute
 
 import io.flutter.embedding.android.FlutterActivity
 

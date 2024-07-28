@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:map_route_project/utils/costants/color_constants.dart';
-import 'package:map_route_project/utils/extensions/spacer_extension.dart';
-import 'package:map_route_project/views/widgets/address_input_field.dart';
+import 'package:MapRoute/utils/costants/color_constants.dart';
+import 'package:MapRoute/utils/extensions/spacer_extension.dart';
+import 'package:MapRoute/views/widgets/address_input_field.dart';
 
 import '../controllers/map_controller.dart';
 
@@ -44,7 +44,7 @@ class GoogleMapPage extends StatelessWidget {
                   child: Column(
                     children: [
                       AddressInputField(
-                        controller: mapController.originController, 
+                        controller: mapController.originController,
                         hintText: 'Enter origin address',
                         suggestions: mapController.originSuggestions,
                         onChanged: (value) =>

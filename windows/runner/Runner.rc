@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "map_route_project" "\0"
+            VALUE "FileDescription", "MapRoute" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "map_route_project" "\0"
+            VALUE "InternalName", "MapRoute" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "map_route_project.exe" "\0"
-            VALUE "ProductName", "map_route_project" "\0"
+            VALUE "OriginalFilename", "MapRoute.exe" "\0"
+            VALUE "ProductName", "MapRoute" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

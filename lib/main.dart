@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:map_route_project/views/map_page.dart';
+import 'package:MapRoute/views/map_page.dart';
 
 void main() {
   runApp(const MyApp());
