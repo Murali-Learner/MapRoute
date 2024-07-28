@@ -9,7 +9,6 @@ MapRoute is a Flutter application that provides advanced map functionalities inc
 - **Interactive Maps**: Seamlessly integrate Google Maps into your app for rich map experiences.
 - **Polylines**: Visualize routes and paths with customizable polylines.
 - **Places Search**: Search for places using Google's Places API to get detailed information.
-- **Markers**: Add and manage markers on the map for important locations. 
 - **Efficient State Management**: Powered by GetX for a smooth and reactive experience.
 
 
