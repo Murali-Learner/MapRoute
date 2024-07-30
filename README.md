@@ -1,15 +1,12 @@
+
 # MapRoute
 
-MapRoute is a Flutter application that provides advanced map functionalities including polylines for route visualization and a places search API. Built with GetX state management. Whether you are planning a journey, exploring new places, or just navigating through your city, MapMaster has you covered.
+𝗠𝗮𝗽𝗥𝗼𝘂𝘁𝗲 is Flutter application that  utilized Google Places API and Integrated Google Maps to draw the route map between from and to addresses, and also it calculates the distance and time to travel between them, used Get-X for state management. 
 
-## Features
 
-- **Interactive Maps**: Seamlessly integrate Google Maps into your app for rich map experiences.
-- **Polylines**: Visualize routes and paths with customizable polylines.
-- **Places Search**: Search for places using Google's Places API to get detailed information.
-- **Efficient State Management**: Powered by GetX for a smooth and reactive experience.
+https://github.com/user-attachments/assets/3e21f6e6-8bff-4b1c-b564-cbc624481626
 
-https://github.com/user-attachments/assets/25017c92-2355-4146-b2fe-0891e2d34c57
+
 
 ## Installation
 
@@ -27,17 +24,7 @@ https://github.com/user-attachments/assets/25017c92-2355-4146-b2fe-0891e2d34c57
    ```
 
 3. **Run the app**:
+
    ```bash
    flutter run
    ```
-
-## Usage
-
-1. **Map View**: Navigate through the interactive map and explore different regions.
-2. **Search Places**: Use the search bar to find places and get detailed information.
-3. **Polylines**: Add polylines to visualize routes and paths.
-4. **Markers**: Add markers to highlight important locations on the map.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
