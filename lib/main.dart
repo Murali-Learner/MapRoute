@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Map route project',
+      title: 'MapRoute',
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),

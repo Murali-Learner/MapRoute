@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/services.dart';
+import 'package:MapRoute/utils/bottom_sheet_widget.dart';
+import 'package:MapRoute/utils/global_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:MapRoute/models/place_suggestion.dart';
-import 'package:MapRoute/utils/costants/asset_constants.dart';
-import 'package:MapRoute/utils/costants/key_constants.dart';
+import 'package:MapRoute/utils/constants.dart';
 
 class MapController extends GetxController {
-  final locationController = Location();
   var currentPosition = Rxn<LatLng>();
   var polylines = <PolylineId, Polyline>{}.obs;
   var markers = <MarkerId, Marker>{}.obs;
@@ -33,8 +32,8 @@ class MapController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchLocationUpdates();
 
+    fetchLocationUpdates();
     // Watch for changes in origin and destination positions
     ever(originPosition, (_) => updateMarkersAndFetchPolyline());
     ever(destinationPosition, (_) => updateMarkersAndFetchPolyline());
@@ -42,36 +41,36 @@ class MapController extends GetxController {
 
   Future<void> fetchLocationUpdates() async {
     bool serviceEnabled;
-    PermissionStatus permissionGranted;
+    LocationPermission permissionGranted;
 
-    serviceEnabled = await locationController.serviceEnabled();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled = await locationController.requestService();
+      serviceEnabled = await Geolocator.openLocationSettings();
       if (!serviceEnabled) {
         return;
       }
     }
-
-    permissionGranted = await locationController.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await locationController.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
+    log("service $serviceEnabled");
+    permissionGranted = await Geolocator.checkPermission();
+    if (permissionGranted == LocationPermission.denied) {
+      permissionGranted = await Geolocator.requestPermission();
+      if (permissionGranted != LocationPermission.whileInUse &&
+          permissionGranted != LocationPermission.always) {
         return;
       }
     }
 
-    locationController.onLocationChanged.listen((currentLocation) async {
-      if (currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
-        currentPosition.value =
-            LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        markers[const MarkerId('currentLocation')] = Marker(
-          markerId: const MarkerId('currentLocation'),
-          position: currentPosition.value!,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          infoWindow: const InfoWindow(title: "Current Location"),
-        );
-      }
+    log("Got the location service enabled: $serviceEnabled, permission: $permissionGranted");
+    Geolocator.getPositionStream().listen((currentLocation) {
+      currentPosition.value =
+          LatLng(currentLocation.latitude, currentLocation.longitude);
+      log("Got the location: ${currentPosition.value}");
+      markers[const MarkerId('currentLocation')] = Marker(
+        markerId: const MarkerId('currentLocation'),
+        position: currentPosition.value!,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: const InfoWindow(title: "Current Location"),
+      );
     });
   }
 
@@ -213,7 +212,8 @@ class MapController extends GetxController {
     final polylinePoints = PolylinePoints();
 
     try {
-      final result = await polylinePoints.getRouteBetweenCoordinates(
+      final PolylineResult result =
+          await polylinePoints.getRouteBetweenCoordinates(
         googleMapsApiKey,
         PointLatLng(
             originPosition.value!.latitude, originPosition.value!.longitude),
@@ -222,20 +222,38 @@ class MapController extends GetxController {
       );
 
       if (result.points.isNotEmpty) {
+        // for (PointLatLng element in result.alternatives) {
+        //   log("alternatives ${element.latitude} ${element.longitude}");
+        // }
+        // for (PointLatLng element in result.points) {
+        //   log("PointLatLng ${element.latitude} ${element.longitude}");
+        // }
+
+        debugPrint("poly points ${result.toString()}");
+        showBottomSheet(result);
         return result.points
             .map((point) => LatLng(point.latitude, point.longitude))
             .toList();
       } else {
         log("No route found: ${result.errorMessage}");
-        Get.snackbar(
+        Utils.errorSnackbar(
             "Route Error", "No route found between the selected locations");
         return [];
       }
     } catch (e) {
       log("Failed to get route: $e");
-      Get.snackbar("Route Error", "Failed to get route: $e");
+
       return [];
     }
+  }
+
+  void showBottomSheet(PolylineResult result) {
+    Get.bottomSheet(
+      BottomSheetWidget(
+        result: result,
+      ),
+      isScrollControlled: true,
+    );
   }
 
   void generatePolyLineFromPoints(List<LatLng> polylineCoordinates) {
@@ -274,8 +292,25 @@ class MapController extends GetxController {
     );
 
     mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+    // _zoomOut();
+    hideKeyboard();
   }
 
+  Future<BitmapDescriptor> loadCustomMarker(String assetName) async {
+    final BitmapDescriptor customMarker = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(48, 48)),
+      assetName,
+    );
+
+    return customMarker;
+  }
+
+  Future<void> _zoomOut() async {
+    final currentZoomLevel = await mapController!.getZoomLevel();
+
+    mapController!.animateCamera(CameraUpdate.zoomTo(10));
+    mapController!.animateCamera(CameraUpdate.zoomTo(currentZoomLevel - 1));
+  }
   // Future<BitmapDescriptor> _loadCustomMarker(String assetPath) async {
   //   final byteData = await rootBundle.load(assetPath);
   //   final uint8List = byteData.buffer.asUint8List();
